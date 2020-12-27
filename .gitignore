@@ -1,3 +1,21 @@
+# STM32Cube copied library and project folders
+Drivers/*
+MDK-ARM/*
+EWARM/*
+.settings/*
+Debug/*
+# CrossWorks project files
+!*/*.hzp
+!*/*.hzs
+
+*.o
+.mxproject
+*.cproject
+*.project
+*.ioc
+*.launch
+*.ld
+
 # Prerequisites
 *.d
 
@@ -6,6 +24,7 @@
 *.ko
 *.obj
 *.elf
+
 
 # Linker output
 *.ilk
