@@ -57,6 +57,7 @@ DMA_HandleTypeDef hdma_usart1_tx;
 volatile bool tim10_irq=0;
 uint8_t counter = 0;
 char received;
+char temp[30];
 bool check = 1;
 RTC_TimeTypeDef RtcTime;
 RTC_DateTypeDef RtcDate;
@@ -139,6 +140,7 @@ int main(void)
   RTC_TimeTypeDef time;
   char time_print[20]={"00:00:00"};
   uint8_t compareSeconds=0;
+  LCD_PrintXY("Enter code: ", 0, 0);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -477,7 +479,7 @@ void ReadButton(void)
 		znak[0] = KB_read();
 				if (znak[0] != 0)
 				{
-					LCD_PrintXY("*", counter, 0);
+					LCD_PrintXY("*", counter+11, 0);
 					if (znak[0] == password[counter])
 					{
 						check *= 1;
@@ -492,7 +494,11 @@ void ReadButton(void)
 
 void ReadButtonSuccess(void)
 {
-	LCD_PrintXY("    ", 0, 0);
+	HAL_RTC_GetTime(&hrtc, &RtcTime, RTC_FORMAT_BIN);
+	HAL_RTC_GetDate(&hrtc, &RtcDate, RTC_FORMAT_BIN);
+	sprintf(temp,"Door opened: %2i:%02i:%02i\n",RtcTime.Hours,RtcTime.Minutes,RtcTime.Seconds);
+	HAL_UART_Transmit_DMA(&huart1, temp, 40);
+	LCD_PrintXY("    ", 11, 0);
 	LCD_SetCursor(0, 0);
 	HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, GPIO_PIN_RESET);
 	SetAlarm();
@@ -501,7 +507,7 @@ void ReadButtonSuccess(void)
 }
 void ReadButtonUnsuccess(void)
 {
-	LCD_PrintXY("    ", 0, 0);
+	LCD_PrintXY("    ", 11, 0);
 	LCD_SetCursor(0, 0);
 	HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, GPIO_PIN_SET);
 	SetAlarm();
@@ -543,6 +549,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 	case '0':
 		HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, GPIO_PIN_RESET);
+		HAL_RTC_GetTime(&hrtc, &RtcTime, RTC_FORMAT_BIN);
+		HAL_RTC_GetDate(&hrtc, &RtcDate, RTC_FORMAT_BIN);
+		sprintf(temp,"Door opened: %2i:%02i:%02i\n",RtcTime.Hours,RtcTime.Minutes,RtcTime.Seconds);
+		HAL_UART_Transmit_DMA(&huart1, temp, 40);
 		SetAlarm();
 		break;
 
