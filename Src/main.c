@@ -292,7 +292,7 @@ static void MX_RTC_Init(void)
   /** Initialize RTC and set the Time and Date
   */
   sTime.Hours = 16;
-  sTime.Minutes = 30;
+  sTime.Minutes = 57;
   sTime.Seconds = 0;
   sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
   sTime.StoreOperation = RTC_STOREOPERATION_RESET;
@@ -523,17 +523,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	{
 
 	case '0':
-		size = sprintf(data, "DOOR OPENED\n\r");
 		HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, GPIO_PIN_RESET);
 		SetAlarm();
 		break;
 
 	default:
-		size = sprintf(data, "FAIL\n\r");
 		break;
 	}
 
-//	HAL_UART_Transmit_IT(&huart1, data, size);
 	HAL_UART_Receive_IT(&huart1, &received, 1);
 }
 
