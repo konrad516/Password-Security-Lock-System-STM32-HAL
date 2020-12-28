@@ -49,9 +49,12 @@ RTC_HandleTypeDef hrtc;
 
 TIM_HandleTypeDef htim10;
 
+UART_HandleTypeDef huart1;
+
 /* USER CODE BEGIN PV */
 volatile bool tim10_irq=0;
 uint8_t counter = 0;
+char received;
 bool check = 1;
 RTC_TimeTypeDef RtcTime;
 RTC_DateTypeDef RtcDate;
@@ -63,6 +66,7 @@ static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_TIM10_Init(void);
 static void MX_RTC_Init(void);
+static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
@@ -74,6 +78,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 		}
 	}
 }
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 void ReadButton(void);
 void ReadButtonSuccess(void);
 void ReadButtonUnsuccess(void);
@@ -121,8 +126,10 @@ int main(void)
   MX_I2C1_Init();
   MX_TIM10_Init();
   MX_RTC_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start_IT(&htim10);
+  HAL_UART_Receive_IT(&huart1, &received, 1);
   LCD_Init();
   KB_init();
   RTC_TimeTypeDef time;
@@ -139,7 +146,7 @@ int main(void)
 
 	  if(compareSeconds!=time.Seconds)
 	  {
-		  sprintf((char *)time_print,"%2i:%02i:%02i",time.Hours,time.Minutes,time.Seconds);
+		  sprintf(time_print,"%2i:%02i:%02i",time.Hours,time.Minutes,time.Seconds);
 		  LCD_PrintXY(time_print, 4, 1);
 		  compareSeconds=time.Seconds;
 	  }
@@ -284,18 +291,18 @@ static void MX_RTC_Init(void)
 
   /** Initialize RTC and set the Time and Date
   */
-  sTime.Hours = 15;
-  sTime.Minutes = 7;
-  sTime.Seconds = 10;
+  sTime.Hours = 16;
+  sTime.Minutes = 30;
+  sTime.Seconds = 0;
   sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
   sTime.StoreOperation = RTC_STOREOPERATION_RESET;
   if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK)
   {
     Error_Handler();
   }
-  sDate.WeekDay = RTC_WEEKDAY_THURSDAY;
+  sDate.WeekDay = RTC_WEEKDAY_MONDAY;
   sDate.Month = RTC_MONTH_DECEMBER;
-  sDate.Date = 10;
+  sDate.Date = 28;
   sDate.Year = 20;
 
   if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK)
@@ -358,6 +365,39 @@ static void MX_TIM10_Init(void)
 }
 
 /**
+  * @brief USART1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART1_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART1_Init 0 */
+
+  /* USER CODE END USART1_Init 0 */
+
+  /* USER CODE BEGIN USART1_Init 1 */
+
+  /* USER CODE END USART1_Init 1 */
+  huart1.Instance = USART1;
+  huart1.Init.BaudRate = 9600;
+  huart1.Init.WordLength = UART_WORDLENGTH_8B;
+  huart1.Init.StopBits = UART_STOPBITS_1;
+  huart1.Init.Parity = UART_PARITY_NONE;
+  huart1.Init.Mode = UART_MODE_TX_RX;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART1_Init 2 */
+
+  /* USER CODE END USART1_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -373,10 +413,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(BUZ_GPIO_Port, BUZ_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOA, BUZ_Pin|RELAY_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3
@@ -418,9 +455,6 @@ void ReadButton(void)
 				if (znak[0] != 0)
 				{
 					LCD_PrintXY("*", counter, 0);
-					HAL_GPIO_WritePin(BUZ_GPIO_Port, BUZ_Pin, GPIO_PIN_SET);
-					for(uint16_t i=0; i<60000; i++);
-					HAL_GPIO_WritePin(BUZ_GPIO_Port, BUZ_Pin, GPIO_PIN_RESET);
 					if (znak[0] == password[counter])
 					{
 						check *= 1;
@@ -435,8 +469,6 @@ void ReadButton(void)
 
 void ReadButtonSuccess(void)
 {
-	/*char ok[]="  SUCCESS  \0";
-	LCD_PrintXY(ok, 7, 0);*/
 	LCD_PrintXY("    ", 0, 0);
 	LCD_SetCursor(0, 0);
 	HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, GPIO_PIN_RESET);
@@ -446,8 +478,6 @@ void ReadButtonSuccess(void)
 }
 void ReadButtonUnsuccess(void)
 {
-	/*char badpass[]="UNSUCCESS\0";
-	LCD_PrintXY(badpass, 7, 0);*/
 	LCD_PrintXY("    ", 0, 0);
 	LCD_SetCursor(0, 0);
 	HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, GPIO_PIN_SET);
@@ -482,6 +512,31 @@ void SetAlarm(void)
 	    Error_Handler();
 	  }
 }
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+
+	char data[50];
+	uint16_t size = 0;
+
+	switch (received)
+	{
+
+	case '0':
+		size = sprintf(data, "DOOR OPENED\n\r");
+		HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, GPIO_PIN_RESET);
+		SetAlarm();
+		break;
+
+	default:
+		size = sprintf(data, "FAIL\n\r");
+		break;
+	}
+
+//	HAL_UART_Transmit_IT(&huart1, data, size);
+	HAL_UART_Receive_IT(&huart1, &received, 1);
+}
+
 /* USER CODE END 4 */
 
 /**
