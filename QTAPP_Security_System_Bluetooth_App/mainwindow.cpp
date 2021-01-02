@@ -48,7 +48,7 @@ void MainWindow::addToLogs(QString message)
 void MainWindow::sendMessageToDevice(QString message)
 {
     if(this->socket->isOpen() && this->socket->isWritable()) {
-      this->addToLogs("Wysyłam informacje do urządzenia " + message);
+      this->addToLogs("Wysysłam informacje do urządzeniaa " + message);
       this->socket->write(message.toStdString().c_str());
     } else {
       this->addToLogs("Nie mogę wysłać wiadomości. Połączenie nie zostało ustanowione!");
