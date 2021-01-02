@@ -4,10 +4,10 @@ MDK-ARM/*
 EWARM/*
 .settings/*
 Debug/*
+
 # CrossWorks project files
 !*/*.hzp
 !*/*.hzs
-
 *.o
 .mxproject
 *.cproject
@@ -15,8 +15,6 @@ Debug/*
 *.ioc
 *.launch
 *.ld
-*.bin
-*.mk
 
 # Prerequisites
 *.d
@@ -72,73 +70,7 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-#QT APP
-*~
-*.autosave
-*.a
-*.core
-*.moc
-*.o
-*.obj
-*.orig
-*.rej
-*.so
-*.so.*
-*_pch.h.cpp
-*_resource.rc
-*.qm
-.#*
-*.*#
-core
-!core/
-tags
-.DS_Store
-.directory
-*.debug
-Makefile*
-*.prl
-*.app
-moc_*.cpp
-ui_*.h
-qrc_*.cpp
-Thumbs.db
-*.res
-*.rc
-/.qmake.cache
-/.qmake.stash
+#QT
+build-Security_System_Bluetooth_App-Desktop_Qt_5_15_2_MinGW_64_bit-Debug/*
+build-Security_System_Bluetooth_App-Android_Qt_5_15_2_Clang_Multi_Abi-Debug/*
 
-# qtcreator generated files
-*.pro.user*
-
-# xemacs temporary files
-*.flc
-
-# Vim temporary files
-.*.swp
-
-# Visual Studio generated files
-*.ib_pdb_index
-*.idb
-*.ilk
-*.pdb
-*.sln
-*.suo
-*.vcproj
-*vcproj.*.*.user
-*.ncb
-*.sdf
-*.opensdf
-*.vcxproj
-*vcxproj.*
-
-# MinGW generated files
-*.Debug
-*.Release
-
-# Python byte code
-*.pyc
-
-# Binaries
-# --------
-*.dll
-*.exe
