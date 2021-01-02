@@ -57,7 +57,7 @@ DMA_HandleTypeDef hdma_usart1_tx;
 volatile bool tim10_irq=0;
 uint8_t counter = 0;
 char received;
-char temp[30];
+char temp[40];
 bool check = 1;
 RTC_TimeTypeDef RtcTime;
 RTC_DateTypeDef RtcDate;
