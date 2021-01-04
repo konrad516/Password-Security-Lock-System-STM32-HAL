@@ -41,17 +41,18 @@ void MainWindow::on_pushButtonSearch_clicked()
 
 void MainWindow::addToLogs(QString message)
 {
-    QString currentDateTime = QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss");
+    QString currentDateTime = QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss");
     ui->textEditLogs->append(currentDateTime + "\t" + message);
+   // ui->lcdNumberTemperature->display();
 }
 
 void MainWindow::sendMessageToDevice(QString message)
 {
     if(this->socket->isOpen() && this->socket->isWritable()) {
-      this->addToLogs("Wysysłam informacje do urządzeniaa " + message);
+      this->addToLogs("Sending message: " + message);
       this->socket->write(message.toStdString().c_str());
     } else {
-      this->addToLogs("Nie mogę wysłać wiadomości. Połączenie nie zostało ustanowione!");
+      this->addToLogs("Can't send message. Connection is not set!");
     }
 }
 
@@ -63,12 +64,12 @@ void MainWindow::on_pushButtonConnect_clicked()
 
     static const QString serviceUuid(QStringLiteral("00001101-0000-1000-8000-00805F9B34FB"));
     this->socket->connectToService(QBluetoothAddress(deviceAddres),QBluetoothUuid(serviceUuid),QIODevice::ReadWrite);
-    this->addToLogs("Rozpoczęto łączenie z urządzeniem o nazwie: " + portList.first() + " i adresie: " + deviceAddres);
+    this->addToLogs("Wait for connection with: " + portList.first() + " address: " + deviceAddres);
 }
 
 void MainWindow::on_pushButtonDisconnect_clicked()
 {
-    this->addToLogs("Zamykam połączenie.");
+    this->addToLogs("Connection close.");
     this->socket->disconnectFromService();
 }
 
@@ -78,14 +79,13 @@ void MainWindow::readFromPort()
 
 void MainWindow::on_pushButtonOpen_clicked()
 {
-    this->addToLogs("Włączam diodę.");
-    this->sendMessageToDevice("1");
+    //this->addToLogs("Open door.");
+    this->sendMessageToDevice("open door");
 }
 
 void MainWindow::captureDeviceProperties(const QBluetoothDeviceInfo &device)
 {
     ui->comboBoxDevices->addItem(device.name() + " " + device.address().toString());
-  //  this->addToLogs("Device: " + device.name() + " found, address: " + device.address().toString());
 }
 
 void MainWindow::searchingFinished()
@@ -95,12 +95,12 @@ void MainWindow::searchingFinished()
 
 void MainWindow::connectionEstablished()
 {
-  this->addToLogs("Połączenie ustanowione.");
+  this->addToLogs("Successful connection.");
 }
 
 void MainWindow::connectionInterrupted()
 {
-  this->addToLogs("Połączenie przerwane.");
+  this->addToLogs("Connection has been interrupted.");
 }
 
 void MainWindow::socketReadyToRead()

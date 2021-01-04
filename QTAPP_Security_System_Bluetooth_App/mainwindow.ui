@@ -15,33 +15,35 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_4">
-    <item row="1" column="0" colspan="2">
-     <widget class="QGroupBox" name="groupBox_2">
+    <item row="2" column="0">
+     <widget class="QGroupBox" name="groupBox_3">
       <property name="title">
-       <string>Logs</string>
+       <string>Control</string>
       </property>
-      <layout class="QGridLayout" name="gridLayout_2">
+      <layout class="QGridLayout" name="gridLayout_3">
        <item row="0" column="0">
-        <widget class="QTextEdit" name="textEditLogs"/>
-       </item>
-       <item row="1" column="0">
-        <widget class="QPushButton" name="pushButtonClear">
+        <widget class="QPushButton" name="pushButtonOpen">
          <property name="text">
-          <string>Clear</string>
+          <string>Open door</string>
          </property>
         </widget>
        </item>
       </layout>
      </widget>
     </item>
-    <item row="3" column="1">
-     <widget class="QPushButton" name="pushButtonExit">
-      <property name="text">
-       <string>Exit</string>
+    <item row="2" column="1" rowspan="2">
+     <widget class="QGroupBox" name="groupBox_4">
+      <property name="title">
+       <string>Temperature</string>
       </property>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="0" column="0">
+        <widget class="QLCDNumber" name="lcdNumber"/>
+       </item>
+      </layout>
      </widget>
     </item>
-    <item row="0" column="0" colspan="2">
+    <item row="0" column="0" colspan="3">
      <widget class="QGroupBox" name="groupBox">
       <property name="title">
        <string>Connection</string>
@@ -74,20 +76,30 @@
       </layout>
      </widget>
     </item>
-    <item row="2" column="0">
-     <widget class="QGroupBox" name="groupBox_3">
+    <item row="1" column="0" colspan="3">
+     <widget class="QGroupBox" name="groupBox_2">
       <property name="title">
-       <string>Control</string>
+       <string>Logs</string>
       </property>
-      <layout class="QGridLayout" name="gridLayout_3">
+      <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
-        <widget class="QPushButton" name="pushButtonOpen">
+        <widget class="QTextEdit" name="textEditLogs"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="pushButtonClear">
          <property name="text">
-          <string>Open door</string>
+          <string>Clear</string>
          </property>
         </widget>
        </item>
       </layout>
+     </widget>
+    </item>
+    <item row="3" column="2">
+     <widget class="QPushButton" name="pushButtonExit">
+      <property name="text">
+       <string>Exit</string>
+      </property>
      </widget>
     </item>
    </layout>
