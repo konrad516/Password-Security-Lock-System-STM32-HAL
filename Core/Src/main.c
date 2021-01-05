@@ -181,6 +181,7 @@ int main(void) {
 	uint8_t compareSeconds = 0;
 	float compare_temperature = 0.0;
 	LCD_PrintXY("Enter code: ", 0, 0);
+	bool refresh_display=0;
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
@@ -196,20 +197,23 @@ int main(void) {
 		if (compare_temperature != TemperatureValue) {
 			sprintf(temperature_print, "Temp: %0.1f%cC   ", TemperatureValue,
 					0xDF);
+			refresh_display=1;
 			compare_temperature = TemperatureValue;
 		}
 		if (compareSeconds != time.Seconds) {
 			sprintf(time_print, "Time: %2i:%02i:%02i", time.Hours, time.Minutes,
 					time.Seconds);
+			refresh_display=1;
 			compareSeconds = time.Seconds;
 		}
-		if (tim11_irq > 16) {
+		if (tim11_irq > 16 && refresh_display) {
 
 			LCD_PrintXY(temperature_print, 0, 1);
-		} else {
+			refresh_display=0;
+		} else if(refresh_display) {
 
 			LCD_PrintXY(time_print, 0, 1);
-
+			refresh_display=0;
 		}
 
 		/* USER CODE END WHILE */
@@ -650,12 +654,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 		HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, GPIO_PIN_RESET);
 		HAL_RTC_GetTime(&hrtc, &RtcTime, RTC_FORMAT_BIN);
 		HAL_RTC_GetDate(&hrtc, &RtcDate, RTC_FORMAT_BIN);
-		sprintf(temp, "Door opened: %2i:%02i:%02i\n", RtcTime.Hours,
+		sprintf(temp, "\r\nDoor opened: %2i:%02i:%02i\r\n", RtcTime.Hours,
 				RtcTime.Minutes, RtcTime.Seconds);
-		HAL_UART_Transmit_DMA(&huart1, temp, 40);
+		HAL_UART_Transmit_DMA(&huart1, temp, sizeof(temp));
 		SetAlarm();
 		break;
-
+	case '1':
+		sprintf(temp, "%\r\n%0.1f           \r\n", TemperatureValue);
+		HAL_UART_Transmit_DMA(&huart1, temp, 40);
+		break;
 	default:
 		break;
 	}

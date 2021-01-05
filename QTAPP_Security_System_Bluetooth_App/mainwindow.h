@@ -36,6 +36,8 @@ private slots:
     void connectionInterrupted();
     void socketReadyToRead();
 
+    void on_pushButtonGetTemperature_clicked();
+
 private:
     Ui::MainWindow *ui;
     QBluetoothDeviceDiscoveryAgent *discoveryAgent;

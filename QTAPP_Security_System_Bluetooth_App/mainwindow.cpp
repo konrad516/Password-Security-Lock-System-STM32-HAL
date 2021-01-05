@@ -49,7 +49,7 @@ void MainWindow::addToLogs(QString message)
 void MainWindow::sendMessageToDevice(QString message)
 {
     if(this->socket->isOpen() && this->socket->isWritable()) {
-      this->addToLogs("Sending message: " + message);
+    //  this->addToLogs("Sending message: " + message);
       this->socket->write(message.toStdString().c_str());
     } else {
       this->addToLogs("Can't send message. Connection is not set!");
@@ -79,8 +79,8 @@ void MainWindow::readFromPort()
 
 void MainWindow::on_pushButtonOpen_clicked()
 {
-    //this->addToLogs("Open door.");
-    this->sendMessageToDevice("open door");
+    this->addToLogs("Open door.");
+    this->sendMessageToDevice("0");
 }
 
 void MainWindow::captureDeviceProperties(const QBluetoothDeviceInfo &device)
@@ -107,10 +107,16 @@ void MainWindow::socketReadyToRead()
 {
     while(this->socket->canReadLine()) {
       QString line = this->socket->readLine();
-
+      qDebug()<<line;
       QString terminator = "\r";
       int pos = line.lastIndexOf(terminator);
 
-      this->addToLogs(line.left(pos));
+      if(line.left(pos)!="")
+         this->addToLogs(line.left(pos));
     }
+}
+
+void MainWindow::on_pushButtonGetTemperature_clicked()
+{
+      this->sendMessageToDevice("1");
 }
