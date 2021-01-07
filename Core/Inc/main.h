@@ -58,8 +58,6 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define BUZ_Pin GPIO_PIN_0
-#define BUZ_GPIO_Port GPIOA
 #define RELAY_Pin GPIO_PIN_6
 #define RELAY_GPIO_Port GPIOA
 /* USER CODE BEGIN Private defines */

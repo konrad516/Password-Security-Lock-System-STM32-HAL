@@ -107,12 +107,11 @@ void MainWindow::socketReadyToRead()
 {
     while(this->socket->canReadLine()) {
       QString line = this->socket->readLine();
-      qDebug()<<line;
       QString terminator = "\r";
       int pos = line.lastIndexOf(terminator);
 
       if(line.left(pos)!="")
-         this->addToLogs(line.left(pos));
+          this->addToLogs(line.left(pos));
     }
 }
 
