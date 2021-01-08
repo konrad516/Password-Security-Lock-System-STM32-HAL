@@ -43,13 +43,11 @@ void MainWindow::addToLogs(QString message)
 {
     QString currentDateTime = QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss");
     ui->textEditLogs->append(currentDateTime + "\t" + message);
-   // ui->lcdNumberTemperature->display();
 }
 
 void MainWindow::sendMessageToDevice(QString message)
 {
     if(this->socket->isOpen() && this->socket->isWritable()) {
-    //  this->addToLogs("Sending message: " + message);
       this->socket->write(message.toStdString().c_str());
     } else {
       this->addToLogs("Can't send message. Connection is not set!");
@@ -118,4 +116,14 @@ void MainWindow::socketReadyToRead()
 void MainWindow::on_pushButtonGetTemperature_clicked()
 {
       this->sendMessageToDevice("1");
+}
+
+void MainWindow::on_pushButtonLight1_clicked()
+{
+    this->sendMessageToDevice("2");
+}
+
+void MainWindow::on_pushButtonLight2_clicked()
+{
+    this->sendMessageToDevice("3");
 }

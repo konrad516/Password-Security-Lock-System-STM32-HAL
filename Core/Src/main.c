@@ -401,8 +401,8 @@ static void MX_RTC_Init(void)
 
   /** Initialize RTC and set the Time and Date
   */
-  sTime.Hours = 16;
-  sTime.Minutes = 30;
+  sTime.Hours = 12;
+  sTime.Minutes = 40;
   sTime.Seconds = 0;
   sTime.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
   sTime.StoreOperation = RTC_STOREOPERATION_RESET;
@@ -410,10 +410,10 @@ static void MX_RTC_Init(void)
   {
     Error_Handler();
   }
-  sDate.WeekDay = RTC_WEEKDAY_MONDAY;
-  sDate.Month = RTC_MONTH_DECEMBER;
-  sDate.Date = 28;
-  sDate.Year = 20;
+  sDate.WeekDay = RTC_WEEKDAY_FRIDAY;
+  sDate.Month = RTC_MONTH_JANUARY;
+  sDate.Date = 8;
+  sDate.Year = 21;
 
   if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK)
   {
@@ -573,11 +573,21 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOC, LED1_Pin|LED2_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(RELAY_GPIO_Port, RELAY_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_2|GPIO_PIN_3
                           |GPIO_PIN_4|GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : LED1_Pin LED2_Pin */
+  GPIO_InitStruct.Pin = LED1_Pin|LED2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pin : RELAY_Pin */
   GPIO_InitStruct.Pin = RELAY_Pin;
@@ -681,8 +691,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 		SetAlarm();
 		break;
 	case '1':
-		sprintf(temp, "%\r\n%0.1f           \r\n", TemperatureValue);
+		sprintf(temp, "%\r\nTemperature: %0.1f           \r\n", TemperatureValue);
 		HAL_UART_Transmit_DMA(&huart1, temp, 40);
+		break;
+	case '2':
+		HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+		break;
+	case '3':
+		HAL_GPIO_TogglePin(LED1_GPIO_Port, LED2_Pin);
 		break;
 	default:
 		break;

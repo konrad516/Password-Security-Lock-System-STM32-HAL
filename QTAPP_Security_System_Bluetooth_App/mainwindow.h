@@ -38,6 +38,10 @@ private slots:
 
     void on_pushButtonGetTemperature_clicked();
 
+    void on_pushButtonLight1_clicked();
+
+    void on_pushButtonLight2_clicked();
+
 private:
     Ui::MainWindow *ui;
     QBluetoothDeviceDiscoveryAgent *discoveryAgent;
