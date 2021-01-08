@@ -26,11 +26,10 @@ Relay open time (in seconds) can be set in Core/Src/main.c
 ## Schematic
 <img src="images/schematic.png" />
 
-## Aplication
-### Desktop
-<img src="images/desktop.png" >
-### Android
+## Aplication (Windows and Android)
+<img src="images/desktop.png">
 <img src="images/android.jpg" width="270" height="480">
+
 
 ## Partlist
 * STM32F407VET6 Development Board
