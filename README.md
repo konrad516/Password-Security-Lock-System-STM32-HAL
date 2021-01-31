@@ -1,4 +1,4 @@
-# Smart Home STM32F4 HAL
+# Smart Lock STM32F4 HAL
 This is a academic project based on STM32F407VET6 Cortex-M4 CPU. The programming environment are STM32CubeIDE, QT 5.15 and Autodesk Eagle.
 ## Features
 ### Board
